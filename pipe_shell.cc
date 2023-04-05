@@ -88,8 +88,8 @@ void pipe_cmds(const vector<vector<string>>& cmds) {
     vector<int[2]> pipes(num_cmds - 1);
     for (int i = 0; i < num_cmds - 1; i++) {
         if (pipe(pipes[i]) < 0) {
-            perror("pipe failed");
-            exit(1);
+            cerr << strerror(errno) << endl;
+            exit(EXIT_FAILURE);
         }
     }
 
@@ -97,8 +97,8 @@ void pipe_cmds(const vector<vector<string>>& cmds) {
     vector<pid_t> pids(num_cmds);
     for (int i = 0; i < num_cmds; i++) {
         if ((pids[i] = fork()) < 0) {
-            perror("fork failed");
-            exit(1);
+            cerr << strerror(errno) << endl;
+            exit(EXIT_FAILURE);
         } else if (pids[i] == 0) {
             // Child process.
 
@@ -126,10 +126,10 @@ void pipe_cmds(const vector<vector<string>>& cmds) {
             }
             argv[cmd.size()] = nullptr;
             execvp(argv[0], argv);
-            
-            perror("execvp failed");
+
+            cerr << strerror(errno) << endl;
             delete[] argv;
-            exit(1);
+            exit(EXIT_FAILURE);
         }
     }
     // close all pipe ends in parent process
@@ -145,31 +145,6 @@ void pipe_cmds(const vector<vector<string>>& cmds) {
 }
 
 
-int run_cmd(int argc, char** argv) {
-
-    pid_t pid = fork();
-    if (!pid) {
-        // child
-        char** args = new char*[argc+1];
-        for (int i = 0; i < argc; i++) {
-            args[i] = argv[i];
-        }
-        args[argc] = nullptr; // null terminate args array
-        execvp(argv[0], args);
-
-        // Exec didn't work, so an error must have been encountered
-        cerr << strerror(errno) << endl;
-        delete[] args;
-        exit(EXIT_FAILURE);
-
-
-    }
-
-    // parent
-    waitpid(pid, nullptr, 0);
-    return EXIT_SUCCESS;
-}
-
 bool to_quit(string word) {
     return word.compare("exit") == 0;
 }
@@ -180,11 +155,11 @@ int read_args(vector<string>& args) {
     if (!getline(cin, line) || to_quit(line)) {
         if(!cin.eof()){
             // complex output required
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         // simple output required
         cout << endl;
-        exit(0);
+        exit(EXIT_SUCCESS);
     }
 
     boost::algorithm::trim(line);
