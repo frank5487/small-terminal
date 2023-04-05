@@ -176,6 +176,12 @@ int read_args(vector<string>& args) {
     string line;
 
     if (!getline(cin, line) || to_quit(line)) {
+        if(!cin.eof()){
+            // complex output required
+            exit(1);
+        }
+        // simple output required
+        cout << endl;
         exit(0);
     }
 
