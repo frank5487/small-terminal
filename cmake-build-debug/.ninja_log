@@ -1,0 +1,5 @@
+# ninja log v5
+276	313	1680710266529369143	CMakeFiles/HW4.dir/multi_pipe.cc.o	cadbf72a104ce142
+0	1479	1680710337842080821	CMakeFiles/HW4.dir/pipe_shell.cc.o	f8bec12648c3ae60
+1	275	1680710266493368782	CMakeFiles/HW4.dir/sh.cc.o	b819d0a5826c5ebb
+7	282	1680710266497368822	CMakeFiles/HW4.dir/stdin_echo.cc.o	765e6249fc20b758
