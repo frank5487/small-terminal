@@ -126,7 +126,9 @@ void pipe_cmds(const vector<vector<string>>& cmds) {
             }
             argv[cmd.size()] = nullptr;
             execvp(argv[0], argv);
+            
             perror("execvp failed");
+            delete[] argv;
             exit(1);
         }
     }
